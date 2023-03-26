@@ -1,0 +1,8 @@
+{
+    "configuration": "PartitionScheme=no_ota,UploadSpeed=921600,DebugLevel=none,EraseFlash=none",
+    "board": "esp32:esp32:pico32",
+    "port": "COM3",
+    "output": "Y:\\build_vsc",
+    "intelliSenseGen": "disable",
+    "sketch": "LG_Mini_EPD_test\\LG_Mini_EPD_test.ino"
+}
