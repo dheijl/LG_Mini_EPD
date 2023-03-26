@@ -42,6 +42,9 @@ typedef struct pu_window {
 static constexpr const PU_WINDOW dw { 0, 15, 170, 20 };
 static constexpr const PU_WINDOW tw { 0, 40, 170, 20 };
 
+static constexpr const char* ssid = "*****";
+static constexpr const char* psw = "******";
+
 static struct tm old_time;
 static struct tm curtime;
 
@@ -55,7 +58,7 @@ void setup(void)
     Serial.println("setup");
 
     WiFi.mode(WIFI_STA);
-    WiFi.begin("devolo-803", "RSKZPLAVZSPIOONP");
+    WiFi.begin(ssid, psw);
     while (WiFi.status() != WL_CONNECTED) {
         Serial.print('.');
         vTaskDelay(100);
