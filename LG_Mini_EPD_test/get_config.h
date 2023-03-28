@@ -5,6 +5,8 @@
 typedef struct wifi_config {
     String ssid;
     String psw;
-} WIFI_CONFIG;
+    String ntp_server;
+    String tz;
+} DEV_CONFIG;
 
-WIFI_CONFIG& get_wifi();
+DEV_CONFIG& get_config();

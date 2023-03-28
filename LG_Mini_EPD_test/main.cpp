@@ -19,16 +19,13 @@
 #include <GxIO/GxIO.h>
 #include <GxIO/GxIO_SPI/GxIO_SPI.h>
 
-#include "get_wifi.h"
+#include "get_config.h"
 
 // for SPI pin definitions see e.g.:
 // C:\Users\xxx\Documents\Arduino\hardware\espressif\esp32\variants\lolin32\pins_arduino.h
 
 GxIO_Class io(SPI, EPD_CS, EPD_DC, EPD_RSET);
 GxEPD_Class display(io, EPD_RSET, EPD_BUSY);
-
-static constexpr const char* NTP_SERVER = "europe.pool.ntp.org";
-static const constexpr char* TZ_BRUSSELS = "CET-1CEST,M3.5.0,M10.5.0/3";
 
 typedef struct pu_window {
     uint16_t box_x;
@@ -52,9 +49,9 @@ void setup(void)
     Serial.println();
     Serial.println("setup");
 
-    auto wifi_config = get_wifi();
+    auto config = get_config();
     WiFi.mode(WIFI_STA);
-    WiFi.begin(wifi_config.ssid.c_str(), wifi_config.psw.c_str());
+    WiFi.begin(config.ssid.c_str(), config.psw.c_str());
     while (WiFi.status() != WL_CONNECTED) {
         Serial.print('.');
         vTaskDelay(100);
@@ -63,19 +60,17 @@ void setup(void)
     Serial.println(WiFi.localIP());
 
     // get UTC time
-    configTime(0, 0, NTP_SERVER);
+    configTime(0, 0, config.ntp_server.c_str());
     struct tm tim;
     if (!getLocalTime(&tim)) {
         Serial.println("Could not obtain time info");
     }
     // configure local time
-    setenv("TZ", TZ_BRUSSELS, 1);
+    setenv("TZ", config.tz.c_str(), 1);
     tzset();
 
-#if defined(LILYGO_T5_V102)
     pinMode(POWER_ENABLE, OUTPUT);
     digitalWrite(POWER_ENABLE, HIGH);
-#endif /*LILYGO_T5_V102*/
 
     // init display
     SPI.begin(EPD_SCLK, EPD_MISO, EPD_MOSI);
