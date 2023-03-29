@@ -1,5 +1,8 @@
 # LG_Mini_EPD (LILYGO_T5_V102)
 
+![afbeelding](https://user-images.githubusercontent.com/2384545/228531196-47f3a692-ee10-451c-bc2d-1bc0b8e5144b.png)
+
+
 Simple digital clock example with the LilyGo ESP32 mini-EPD display (LILYGO_T5_V102).
 
 It uses SNTP to get the time and configures the correct timezone.
