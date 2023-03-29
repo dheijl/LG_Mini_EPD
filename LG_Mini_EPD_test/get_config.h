@@ -21,11 +21,11 @@
 
 #include <Arduino.h>
 
-typedef struct wifi_config {
+typedef struct config {
     String ssid;
     String psw;
     String ntp_server;
     String tz;
-} DEV_CONFIG;
+} CONFIG;
 
-DEV_CONFIG& get_config();
+CONFIG& load_config();

@@ -31,13 +31,38 @@ SPIClass SDSPI(VSPI);
 
 static const constexpr char* NVS_WIFI = "wifi";
 
-static DEV_CONFIG _config { String(""), String(""), String(""), String("") };
+static CONFIG _config { String(""), String(""), String(""), String("") };
 
-DEV_CONFIG& get_config()
+static void load_config_from_SD();
+
+// load config from SD if present or from previously saved NVS preferences
+CONFIG& load_config()
 {
 
-    Preferences prefs;
+    // try to load a config from SD
+    load_config_from_SD();
 
+    // read saved config from NVS prefs
+    Preferences prefs;
+    if (!prefs.begin(NVS_WIFI, true)) {
+        prefs.end();
+        Serial.println("wifi read prefs begin error");
+        return _config;
+    }
+    _config.ssid = prefs.getString("ssid");
+    _config.psw = prefs.getString("psw");
+    _config.ntp_server = prefs.getString("ntp_server");
+    _config.tz = prefs.getString("tz");
+    prefs.end();
+    Serial.println("NVS Prefs: " + _config.ssid + ":" + _config.psw + ":" + _config.ntp_server + ":" + _config.tz);
+    if (_config.ssid.isEmpty() || _config.psw.isEmpty()) {
+        Serial.println("empty wifi prefs!");
+    }
+    return _config;
+}
+
+void load_config_from_SD()
+{
     // check for an SD card with config info file
     SDSPI.begin(SDCARD_SCLK, SDCARD_MISO, SDCARD_MOSI);
     if (SD.begin(SDCARD_CS, SDSPI)) {
@@ -54,7 +79,8 @@ DEV_CONFIG& get_config()
             _config.tz.trim();
             file.close();
             Serial.println(_config.ssid + ":" + _config.psw + ":" + _config.ntp_server + ":" + _config.tz);
-            Serial.println("Saving config to NVS preferences");
+            Serial.println("Saving SD config to NVS preferences");
+            Preferences prefs;
             if (!prefs.begin(NVS_WIFI, false)) {
                 Serial.println("wifi write prefs begin error");
                 prefs.end();
@@ -85,20 +111,4 @@ DEV_CONFIG& get_config()
             Serial.println("Can not find a config file!");
         }
     }
-    // now read config from NVS prefs
-    if (!prefs.begin(NVS_WIFI, true)) {
-        prefs.end();
-        Serial.println("wifi read prefs begin error");
-        return _config;
-    }
-    _config.ssid = prefs.getString("ssid");
-    _config.psw = prefs.getString("psw");
-    _config.ntp_server = prefs.getString("ntp_server");
-    _config.tz = prefs.getString("tz");
-    prefs.end();
-    Serial.println("NVS Prefs: " + _config.ssid + ":" + _config.psw + ":" + _config.ntp_server + ":" + _config.tz);
-    if (_config.ssid.isEmpty() || _config.psw.isEmpty()) {
-        Serial.println("empty wifi prefs!");
-    }
-    return _config;
 }

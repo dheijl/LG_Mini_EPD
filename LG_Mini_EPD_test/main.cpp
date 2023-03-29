@@ -68,7 +68,7 @@ void setup(void)
     Serial.println();
     Serial.println("setup");
 
-    auto config = get_config();
+    auto config = load_config();
     WiFi.mode(WIFI_STA);
     WiFi.begin(config.ssid.c_str(), config.psw.c_str());
     while (WiFi.status() != WL_CONNECTED) {
