@@ -61,6 +61,7 @@ static struct tm curtime;
 
 void showTime();
 void showDate();
+void showError(String error);
 
 void setup(void)
 {
@@ -70,6 +71,9 @@ void setup(void)
 
     // read config from SSD or NVS preferences
     auto config = get_config();
+    if (!config.loaded) {
+        showError("NO CONFIG");
+    }
     // connect to WiFi
     WiFi.mode(WIFI_STA);
     WiFi.begin(config.ssid.c_str(), config.psw.c_str());
@@ -142,4 +146,16 @@ void showDate()
     display.setCursor(dw.box_x, dw.box_y + 16);
     display.printf("%d/%d/%d", curtime.tm_mday, curtime.tm_mon + 1, curtime.tm_year + 1900);
     display.updateWindow(dw.box_x, dw.box_y, dw.box_w, dw.box_h, true);
+}
+
+void showError(String error)
+{
+    display.fillScreen(GxEPD_WHITE);
+    display.setCursor(tw.box_x, tw.box_y + 16);
+    display.printf("E: %s", error);
+    display.updateWindow(tw.box_x, tw.box_y, tw.box_w, tw.box_h, true);
+    display.update();
+    while (true) {
+        vTaskDelay(1);
+    }
 }

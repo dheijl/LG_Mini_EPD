@@ -22,6 +22,7 @@
 #include <Arduino.h>
 
 typedef struct config {
+    bool loaded;
     String ssid;
     String psw;
     String ntp_server;

@@ -31,8 +31,7 @@ SPIClass SDSPI(VSPI);
 
 static const constexpr char* NVS_WIFI = "wifi";
 
-static CONFIG _config { String(""), String(""), String(""), String("") };
-static bool _have_config = false;
+static CONFIG _config { false, String(), String(), String(), String() };
 
 static void load_config_from_SD();
 
@@ -40,7 +39,7 @@ static void load_config_from_SD();
 CONFIG& get_config()
 {
 
-    if (_have_config) {
+    if (_config.loaded) {
         return _config;
     }
 
@@ -63,7 +62,7 @@ CONFIG& get_config()
     if (_config.ssid.isEmpty() || _config.psw.isEmpty()) {
         Serial.println("empty wifi prefs!");
     } else {
-        _have_config = true;
+        _config.loaded = true;
     }
     return _config;
 }
