@@ -68,7 +68,9 @@ void setup(void)
     Serial.println();
     Serial.println("setup");
 
-    auto config = load_config();
+    // read config from SSD or NVS preferences
+    auto config = get_config();
+    // connect to WiFi
     WiFi.mode(WIFI_STA);
     WiFi.begin(config.ssid.c_str(), config.psw.c_str());
     while (WiFi.status() != WL_CONNECTED) {
@@ -77,8 +79,7 @@ void setup(void)
     }
     Serial.println();
     Serial.println(WiFi.localIP());
-
-    // get UTC time
+    // get UTC time from SNTP
     configTime(0, 0, config.ntp_server.c_str());
     struct tm tim;
     if (!getLocalTime(&tim)) {
@@ -87,10 +88,9 @@ void setup(void)
     // configure local time
     setenv("TZ", config.tz.c_str(), 1);
     tzset();
-
+    // configure e-paper display
     pinMode(POWER_ENABLE, OUTPUT);
     digitalWrite(POWER_ENABLE, HIGH);
-
     // init display
     SPI.begin(EPD_SCLK, EPD_MISO, EPD_MOSI);
     display.init();
@@ -103,7 +103,7 @@ void setup(void)
     display.fillScreen(GxEPD_WHITE);
     display.update();
     vTaskDelay(100);
-
+    // font & color
     display.setTextColor(GxEPD_BLACK);
     display.setFont(&FreeMonoBold9pt7b);
 

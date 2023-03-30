@@ -28,4 +28,4 @@ typedef struct config {
     String tz;
 } CONFIG;
 
-CONFIG& load_config();
+CONFIG& get_config();
