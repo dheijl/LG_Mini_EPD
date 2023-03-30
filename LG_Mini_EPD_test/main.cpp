@@ -138,6 +138,7 @@ void showTime()
     display.setCursor(tw.box_x, tw.box_y + 16);
     display.printf("%02d:%02d:%02d", curtime.tm_hour, curtime.tm_min, curtime.tm_sec);
     display.updateWindow(tw.box_x, tw.box_y, tw.box_w, tw.box_h, true);
+    display.powerDown();
 }
 
 void showDate()
@@ -158,4 +159,5 @@ void showError(String error)
     while (true) {
         vTaskDelay(1);
     }
+    display.powerDown();
 }
