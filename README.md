@@ -20,7 +20,7 @@ This config file consists of 4 lines with:
 
 So the first time you run the program it needs a valid config.txt file in the SD card slot.
 
-If no SD card if present the Wifi/NTP/TZ configuration is read from the NVS preferences that were previously copied from the SD card.
+If no SD card is present the Wifi/NTP/TZ configuration is read from the NVS preferences that were previously copied from the SD card.
 
 An example config.txt is provided.
 
